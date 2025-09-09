@@ -10,11 +10,11 @@ Keep your Raspberry Pi up to date before installing packages.
 
 ```bash
 sudo apt update && sudo apt upgrade -y
+```
 2. Install System Packages
 These packages provide camera support, image processing, GUI tools, and dependencies.
 
-bash
-Copy code
+```bash
 sudo apt install -y \
   python3-opencv \
   python3-pil \
@@ -28,25 +28,26 @@ sudo apt install -y \
   libcamera-dev \
   libopenjp2-7-dev \
   v4l-utils
+```
 3. Create Virtual Environment
 We’ll use a virtual environment with access to system packages.
 
-bash
-Copy code
+```bash
 cd ~/pbooth_updated
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
-bash
+```
 4. Upgrade pip Inside Venv
 Always update pip inside the venv to avoid compatibility issues.
 
-bash
+```bash
 pip install --upgrade pip
-5. Install Extra Python Packages (Venv Only)
+```
+6. Install Extra Python Packages (Venv Only)
 ⚠️ Do not install numpy or simplejpeg here – they are already provided by system packages.
 
 Install only the missing extras:
 
-bash
-Copy code
+```bash
 pip install pillow opencv-python
+```
