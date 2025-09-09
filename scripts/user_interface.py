@@ -12,8 +12,8 @@ logging.basicConfig(format='%(asctime)s|%(name)-16s| %(levelname)-8s| %(message)
             filemode='w',
             level = logging.DEBUG)
 
-from Tkinter import *
-import tkMessageBox
+from tkinter import *
+import tkinter.messagebox
 from PIL import ImageTk,Image
 #from tkkb import Tkkb
 from mykb import TouchKeyboard
@@ -40,7 +40,7 @@ try:
     import hardware_buttons as HWB
 except ImportError:
     log.error("Error importing hardware_buttons, using fakehardware instead")
-    print traceback.print_exc()
+    print(traceback.print_exc())
     import fakehardware as HWB
 
 try:
@@ -149,7 +149,7 @@ class UserInterface():
 
         ## Bind keyboard keys to actions
         def install_key_binding(action,function):
-            if action in ACTIONS_KEYS_MAPPING.keys():
+            if action in list(ACTIONS_KEYS_MAPPING.keys()):
                 for key in ACTIONS_KEYS_MAPPING[action]:
                     self.log.debug("Installing keybinding '%s' for action '%s'"%(key,action))
                     self.root.bind(key,function)
@@ -316,6 +316,23 @@ class UserInterface():
         self.camera.annotate_foreground = Color('white')
         self.camera.annotate_background = Color('black')
 
+        import cv2
+
+        def update_preview():
+            if self.camera.previewing:
+                frame = self.camera.get_frame()
+                # Convert RGB?BGR for Tkinter Image
+                frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                im = Image.fromarray(frame)
+                imgtk = ImageTk.PhotoImage(image=im)
+                self.image.config(image=imgtk)
+                self.image.image = imgtk
+            self.root.after(30, update_preview)  # ~30 fps
+
+        self.camera.start_preview()
+        update_preview()
+
+
         #Callback for long-press on screen
         def long_press_cb(time):
             #Create a toplevel window with checkboxes and a "Quit application button"
@@ -419,7 +436,7 @@ class UserInterface():
         picture_saved = False
         picture_uploaded = False
 
-        if mode not in EFFECTS_PARAMETERS.keys():
+        if mode not in list(EFFECTS_PARAMETERS.keys()):
             self.log.error("Wrong effectmode %s defaults to 'None'" % mode)
             mode = "None"
 
@@ -511,7 +528,7 @@ class UserInterface():
                     #print front
                     snapshot=Image.alpha_composite(snapshot,front)
 
-                except Exception, e:
+                except Exception as e:
                     self.log.error("snap: unable to paste collage cover: %s"%repr(e))
 
 
@@ -653,7 +670,7 @@ class UserInterface():
                 self.status("Snap failed :(")
                 self.log.critical("snap: snapshot file doesn't exists: %s"%snap_filename)
                 self.image.unload()
-        except Exception, e:
+        except Exception as e:
 
             #traceback.print_exc()
             self.log.exception("snap: error during snapshot")
@@ -885,7 +902,7 @@ class UserInterface():
         try:
             conn = cups.Connection()
             printers = conn.getPrinters()
-            default_printer = printers.keys()[self.selected_printer]#defaults to the first printer installed
+            default_printer = list(printers.keys())[self.selected_printer]#defaults to the first printer installed
             cups.setUser(getpass.getuser())
             conn.printFile(default_printer, self.last_picture_filename, self.last_picture_title, {'fit-to-page':'True'})
             self.log.info('send_print: Sending to printer...')
@@ -918,7 +935,7 @@ class UserInterface():
                     config.emailSubject,
                     config.emailMsg,
                     self.last_picture_filename)
-            except Exception, e:
+            except Exception as e:
                 self.log.exception('send_picture: Mail sending Failed')
                 self.status("Send failed :(")
                 retcode = False
