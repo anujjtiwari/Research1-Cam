@@ -52,7 +52,7 @@
 import logging
 log=logging.getLogger(__name__)
 
-from Tkinter import *
+from tkinter import *
 
 class Key:
     """Implements common behavior for a Keyboard Key"""
@@ -126,7 +126,7 @@ class Key:
         hide every key faces that aren't 'mode' show key face for mode 'mode'
         """
         self.current_value = ""
-        for state in self.key_states.keys():
+        for state in list(self.key_states.keys()):
             if state == mode:
                 self.canvas.itemconfigure(state,state="normal")
                 self.current_value = self.key_states[state]
@@ -492,7 +492,7 @@ class TouchKeyboard:
                         self.bound_entry.configure(font=styledef["font"])
                     continue
                 #print "Applying stylesheet for %s"%tag
-                for  style in styledef.keys():
+                for  style in list(styledef.keys()):
                     try:
                         if style == 'tag' : continue
                         #apply all styles to tag
@@ -515,15 +515,15 @@ class TouchKeyboard:
                     except:
                         pass
                 self.canvas.update()
-            except Exception, e:
+            except Exception as e:
                 log.exception("Error while applying stylesheet")
             
 if __name__ == '__main__':
     r = Tk()
     myres = StringVar()
     def onEnter():
-        print 'Enter Pressed'
-        print "result %s"%myres.get()
+        print('Enter Pressed')
+        print("result %s"%myres.get())
 
     keyboard = TouchKeyboard(r,myres, onEnter = onEnter)
     r.mainloop()
