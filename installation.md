@@ -8,13 +8,13 @@ This guide explains how to set up the Photobooth app with **Raspberry Pi Camera 
 
 Keep your Raspberry Pi up to date before installing packages.
 
-```bash
+```
 sudo apt update && sudo apt upgrade -y
 ```
 2. Install System Packages
 These packages provide camera support, image processing, GUI tools, and dependencies.
 
-```bash
+```
 sudo apt install -y \
   python3-opencv \
   python3-pil \
@@ -32,7 +32,7 @@ sudo apt install -y \
 3. Create Virtual Environment
 We’ll use a virtual environment with access to system packages.
 
-```bash
+```
 cd ~/pbooth_updated
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
@@ -40,7 +40,7 @@ source venv/bin/activate
 4. Upgrade pip Inside Venv
 Always update pip inside the venv to avoid compatibility issues.
 
-```bash
+```
 pip install --upgrade pip
 ```
 6. Install Extra Python Packages (Venv Only)
@@ -48,6 +48,6 @@ pip install --upgrade pip
 
 Install only the missing extras:
 
-```bash
+```
 pip install pillow opencv-python
 ```
