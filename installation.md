@@ -36,11 +36,11 @@ Copy code
 cd ~/pbooth_updated
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
+bash
 4. Upgrade pip Inside Venv
 Always update pip inside the venv to avoid compatibility issues.
 
 bash
-Copy code
 pip install --upgrade pip
 5. Install Extra Python Packages (Venv Only)
 ⚠️ Do not install numpy or simplejpeg here – they are already provided by system packages.
