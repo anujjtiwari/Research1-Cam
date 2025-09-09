@@ -1,7 +1,6 @@
 from flask import Flask, render_template_string, request
 import razorpay
 import subprocess
-import webbrowser
 import os
 
 app = Flask(__name__)
@@ -50,21 +49,21 @@ def index():
     order = razorpay_client.order.create(dict(amount=1000, currency="INR", payment_capture=1))
     return render_template_string(html_template, key="rzp_test_R8Pjr1V054idbz", order_id=order['id'])
 
+
 @app.route('/success', methods=['POST'])
 def success():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    Research1-Cam_dir = os.path.join(base_dir, "..", "Research1-Cam")
 
-    # Step 1: Run setup.sh (ensure cwd is khichik so `cd scripts/` inside works)
-    setup_path = os.path.join(Research1-Cam_dir, "setup.sh")
-    subprocess.run(["bash", setup_path], cwd=Research1-Cam_dir)
+    # Step 1: Run setup.sh
+    setup_path = os.path.join(base_dir, "setup.sh")
+    subprocess.run(["bash", setup_path], cwd=base_dir)
 
-    # Step 2: Automatically run generated photobooth.sh
-    photobooth_path = os.path.join(Research1-Cam_dir, "photobooth.sh")
-    subprocess.Popen(["bash", photobooth_path], cwd=Research1-Cam_dir)
+    # Step 2: Run photobooth.sh
+    photobooth_path = os.path.join(base_dir, "photobooth.sh")
+    subprocess.Popen(["bash", photobooth_path], cwd=base_dir)
 
-    return "? Payment Successful! Setup complete and photobooth.sh is running."
+    return "Payment Successful! Setup complete and photobooth.sh is running."
+
 
 if __name__ == "__main__":
-    # Open browser automatically
     app.run(host="127.0.0.1", port=5000)
